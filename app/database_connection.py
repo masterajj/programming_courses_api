@@ -1,4 +1,5 @@
 import sqlalchemy as db
+from sqlalchemy import text
 from dotenv import load_dotenv
 import os
 
@@ -25,7 +26,15 @@ class DatabaseConnection:
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
           
-    
-dbase = DatabaseConnection()
-
-print(dbase.get_users())
+    def insert_users(self, user) -> dict:
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_InsertUser(:username, :password, :email, :country)")
+            params = {
+                'username': user.username,
+                'password': user.password,
+                'email': user.email,
+                'country': user.country
+            }
+            connection.execute(procedure_call, params)
+            connection.commit()
+        return {"message": "User created successfully!"}
