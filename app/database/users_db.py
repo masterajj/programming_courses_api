@@ -1,24 +1,9 @@
+from database.database_connection import DatabaseConnection
+from database.data_models import User
 import sqlalchemy as db
 from sqlalchemy import text
-from dotenv import load_dotenv
-import os
 
-class DatabaseConnection:
-    def __init__(self) -> None:
-        self.get_db_creds()
-        self.db_engine = self.create_connection()
-        self.metadata = self.get_metadata()
-
-    def get_db_creds(self) -> None:
-        load_dotenv()
-
-    def create_connection(self) -> object:
-        db_engine = db.create_engine(f"mysql+pymysql://{os.getenv('USERNAME')}:{os.getenv('PASSWORD')}@{os.getenv('HOST')}/{os.getenv('DATABASE')}")
-        return db_engine
-
-    def get_metadata(self) -> db.MetaData:
-        return db.MetaData()
-
+class UsersDb(DatabaseConnection):
     def get_users(self) -> dict:
         with self.db_engine.connect() as connection:
             my_table = db.Table("users", self.metadata, autoload_with=connection)
@@ -26,7 +11,7 @@ class DatabaseConnection:
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
           
-    def insert_users(self, user) -> dict:
+    def insert_users(self, user: User) -> dict:
         with self.db_engine.connect() as connection:
             procedure_call = text("CALL sp_InsertUser(:username, :password, :email, :country)")
             params = {
