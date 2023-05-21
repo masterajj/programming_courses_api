@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Response, status
-from routers import users, courses
+from routers import users, courses, api_system, forum
 
 app = FastAPI()
 
@@ -9,3 +9,5 @@ async def ready_check():
 
 app.include_router(users.router)
 app.include_router(courses.router)
+app.include_router(forum.router)
+app.include_router(api_system.router)

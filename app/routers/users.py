@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from database.users_db import UsersDb
-from database.data_models import User
+from database.data_models import User, RoleAssign
 
 router = APIRouter()
 
@@ -13,3 +13,8 @@ async def get_users():
 async def create_user(user: User):
     db = UsersDb()
     return db.insert_users(user)
+
+@router.post("/assign_role/")
+async def assign_user_role(user_role_id: RoleAssign):
+    db = UsersDb()
+    return db.assign_user_role(user_role_id)
