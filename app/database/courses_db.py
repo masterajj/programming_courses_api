@@ -108,3 +108,59 @@ class CoursesDb(DatabaseConnection):
             connection.execute(procedure_call, params)
             connection.commit()
         return {"message": "Assignment created successfully!"}
+
+    def delete_course(self, course_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteCourse(:course_id)")
+            connection.execute(procedure_call, {'course_id': course_id})
+            connection.commit()
+        return {"message": "Course deleted successfully!"}
+
+    def delete_rating(self, course_id: int, user_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteRating(:user_id, :course_id)")
+            connection.execute(procedure_call, {'course_id': course_id, 'user_id': user_id})
+            connection.commit()
+        return {"message": "Rating deleted successfully!"}
+    
+    def delete_comment(self, course_id: int, user_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteComment(:user_id, :course_id)")
+            connection.execute(procedure_call, {'course_id': course_id, 'user_id': user_id})
+            connection.commit()
+        return {"message": "Comment deleted successfully!"}
+    
+    def delete_course_faq(self, faq_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteCourseFaq(:faq_id)")
+            connection.execute(procedure_call, {'course_id': faq_id})
+            connection.commit()
+        return {"message": "Course FAQ deleted successfully!"}     
+
+    def delete_course_tag(self, course_id: int, tag_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteCourseTag(:tag_id, :course_id)")
+            connection.execute(procedure_call, {'course_id': course_id, 'tag_id': tag_id})
+            connection.commit()
+        return {"message": "Course Tag deleted successfully!"}
+    
+    def delete_lecture(self, lecture_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteLecture(:lecture_id)")
+            connection.execute(procedure_call, {'lecture_id': lecture_id})
+            connection.commit()
+        return {"message": "Course Lecture deleted successfully!"}     
+      
+    def delete_test(self, test_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteTest(:test_id)")
+            connection.execute(procedure_call, {'test_id': test_id})
+            connection.commit()
+        return {"message": "Course Test deleted successfully!"}     
+
+    def delete_assignment(self, assignment_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteAssignment(:assignment_id)")
+            connection.execute(procedure_call, {'assignment_id': assignment_id})
+            connection.commit()
+        return {"message": "Course Assignment deleted successfully!"}

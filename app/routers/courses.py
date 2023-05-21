@@ -43,3 +43,43 @@ async def create_lecture(lecture: Lecture):
 async def create_assignment(assingment: Assignment):
     db = CoursesDb()
     return db.create_assignment(assingment)
+
+@router.delete("/courses/{course_id}")
+async def delete_user(course_id: int):
+    db = CoursesDb()
+    return db.delete_course(course_id)
+
+@router.delete("/courses/{course_id}/users/{user_id}/ratings")
+async def delete_rating(course_id: int, user_id: int):
+    db = CoursesDb()
+    return db.delete_rating(course_id, user_id)
+
+@router.delete("/courses/{course_id}/users/{user_id}/comments")
+async def delete_comment(course_id: int, user_id: int):
+    db = CoursesDb()
+    return db.delete_comment(course_id, user_id)
+
+@router.delete("/courses/faq/{faq_id}/")
+async def delete_course_faq(faq_id: int):
+    db = CoursesDb()
+    return db.delete_course_faq(faq_id)
+
+@router.delete("/courses/{course_id}/tags/{tag_id}/")
+async def delete_course_tag(course_id: int, tag_id: int):
+    db = CoursesDb()
+    return db.delete_course_tag(course_id, tag_id)
+
+@router.delete("/courses/lectures/{lecture_id}/")
+async def delete_lecture(lecture_id: int):
+    db = CoursesDb()
+    return db.delete_lecture(lecture_id)
+
+@router.delete("/courses/tests/{test_id}/")
+async def delete_test(test_id: int):
+    db = CoursesDb()
+    return db.delete_test(test_id)
+
+@router.delete("/courses/assignments/{assignment_id}/")
+async def delete_assignment(assignment_id: int):
+    db = CoursesDb()
+    return db.delete_assignment(assignment_id)

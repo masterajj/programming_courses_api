@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from database.users_db import UsersDb
-from database.data_models import User, RoleAssign, UserProgress, UserSession, UserCourse, UserTest, UserAssignments, Certificate, UserForumThread
+from database.data_models import User, RoleAssign, UserProgress, UserSession, UserCourse, UserTest, UserAssignments, Certificate, UserForumThread, UserForumThreadComment
 
 router = APIRouter()
 
@@ -54,7 +54,57 @@ async def assign_user_forum_thread(user_forum_thread: UserForumThread):
     db = UsersDb()
     return db.assign_user_forum_thread(user_forum_thread)
 
+@router.post("/users/forum_thread/comment")
+async def assign_user_forum_thread_comment(user_forum_thread_comment: UserForumThreadComment):
+    db = UsersDb()
+    return db.assign_user_forum_thread_comment(user_forum_thread_comment)
+
 @router.delete("/users/{user_id}")
 async def delete_user(user_id: int):
     db = UsersDb()
     return db.delete_user(user_id)
+
+@router.delete("/users/{user_id}/roles/{role_id}")
+async def delete_user_role(role_id: int, user_id: int):
+    db = UsersDb()
+    return db.delete_user_role(role_id, user_id)
+
+@router.delete("/users/progress/{user_id}")
+async def delete_user_progress(user_id: int):
+    db = UsersDb()
+    return db.delete_user_progress(user_id)
+
+@router.delete("/users/{user_id}/forum_thread/{thread_id}/comment/{comment_id}")
+async def delete_user_forum_thread_comment(user_id: int, thread_id: int, comment_id: int):
+    db = UsersDb()
+    return db.delete_user_forum_thread_comment(user_id, thread_id, comment_id)
+
+@router.delete("/users/user_session/{session_id}")
+async def delete_user_session(session_id: int):
+    db = UsersDb()
+    return db.delete_user_session(session_id)
+
+@router.delete("/users/{user_id}/course/{course_id}")
+async def delete_user_course(user_id: int, course_id: int):
+    db = UsersDb()
+    return db.delete_user_course(user_id, course_id)
+
+@router.delete("/users/{user_id}/course/{course_id}/tests/{test_id}")
+async def delete_user_test(user_id: int, course_id: int, test_id: int):
+    db = UsersDb()
+    return db.delete_user_test(user_id, course_id, test_id)
+
+@router.delete("/users/{user_id}/course/{course_id}/lectures/{lecture_id}/assignments/{assignment_id}")
+async def delete_user_assignment(user_id: int, course_id: int, lecture_id: int, assignment_id: int):
+    db = UsersDb()
+    return db.delete_user_assignment(user_id, course_id, lecture_id, assignment_id)
+
+@router.delete("/users/certificates/{certificate_id}")
+async def delete_certificate(certificate_id: int):
+    db = UsersDb()
+    return db.delete_certificate(certificate_id)
+
+@router.delete("/users/{user_id}/forum_thread/{thread_id}")
+async def delete_user_forum_thread(user_id: int, thread_id: int):
+    db = UsersDb()
+    return db.delete_user_forum_thread(user_id, thread_id)

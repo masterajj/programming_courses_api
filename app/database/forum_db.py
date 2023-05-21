@@ -1,5 +1,5 @@
 from database.database_connection import DatabaseConnection
-from database.data_models import ForumThread, ForumThreadComment, UserForumThreadComment
+from database.data_models import ForumThread, ForumThreadComment
 from sqlalchemy import text
 
 class ForumDb(DatabaseConnection):
@@ -25,14 +25,17 @@ class ForumDb(DatabaseConnection):
             connection.commit()
         return {"message": "Forum Thread Comment added successfully!"}
     
-    def assign_user_forum_thread_comment(self, user_forum_thread_comment: UserForumThreadComment) -> dict:
+    def delete_forum_thread(self, forum_thread_id: int):
         with self.db_engine.connect() as connection:
-            procedure_call = text("CALL sp_InsertUserForumThreadComment(:user_id, :comment_id, :thread_id)")
-            params = {
-                'user_id': user_forum_thread_comment.user_id,
-                'comment_id': user_forum_thread_comment.comment_id,
-                'thread_id': user_forum_thread_comment.thread_id,
-            }
-            connection.execute(procedure_call, params)
+            procedure_call = text("CALL sp_DeleteForumThread(:forum_thread_id)")
+            connection.execute(procedure_call, {'forum_thread_id': forum_thread_id})
             connection.commit()
-        return {"message": "Forum Thread Comment assigned to User successfully!"}
+        return {"message": "Forum Thread deleted successfully!"}        
+
+    def delete_forum_thread_comment(self, comment_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteForumThreadComment(:comment_id)")
+            connection.execute(procedure_call, {'comment_id': comment_id})
+            connection.commit()
+        return {"message": "Forum Thread Comment deleted successfully!"}        
+

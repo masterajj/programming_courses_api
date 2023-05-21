@@ -22,3 +22,18 @@ class SysDb(DatabaseConnection):
             connection.execute(procedure_call, params)
             connection.commit()
         return {"message": "Role created successfully!"}
+    
+    def delete_tag(self, tag_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteTag(:tag_id)")
+            connection.execute(procedure_call, {'tag_id': tag_id})
+            connection.commit()
+        return {"message": "Tag deleted successfully!"}        
+      
+    def delete_role(self, role_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteRole(:role_id)")
+            connection.execute(procedure_call, {'role_id': role_id})
+            connection.commit()
+        return {"message": "Role deleted successfully!"}        
+      

@@ -1,5 +1,5 @@
 from database.database_connection import DatabaseConnection
-from database.data_models import User, RoleAssign, UserProgress, UserSession, UserCourse, UserTest, UserAssignments, Certificate, UserForumThread
+from database.data_models import User, RoleAssign, UserProgress, UserSession, UserCourse, UserTest, UserAssignments, Certificate, UserForumThread, UserForumThreadComment
 import sqlalchemy as db
 from sqlalchemy import text
 
@@ -117,10 +117,85 @@ class UsersDb(DatabaseConnection):
             connection.commit()
         return {"message": "User forum thread assigned successfully!"}
     
+    def assign_user_forum_thread_comment(self, user_forum_thread_comment: UserForumThreadComment) -> dict:
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_InsertUserForumThreadComment(:user_id, :comment_id, :thread_id)")
+            params = {
+                'user_id': user_forum_thread_comment.user_id,
+                'comment_id': user_forum_thread_comment.comment_id,
+                'thread_id': user_forum_thread_comment.thread_id,
+            }
+            connection.execute(procedure_call, params)
+            connection.commit()
+        return {"message": "Forum Thread Comment assigned to User successfully!"}
+    
+
     def delete_user(self, user_id: int):
         with self.db_engine.connect() as connection:
             procedure_call = text("CALL sp_DeleteUser(:user_id)")
             connection.execute(procedure_call, {'user_id': user_id})
             connection.commit()
         return {"message": "User deleted successfully!"}        
-      
+
+    def delete_user_role(self, role_id: int, user_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserRole(:role_id, :user_id)")
+            connection.execute(procedure_call, {'role_id': role_id, 'user_id': user_id})
+            connection.commit()
+        return {"message": "User role deleted successfully!"}
+
+    def delete_user_progress(self, user_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserProgress(:user_id)")
+            connection.execute(procedure_call, {'user_id': user_id})
+            connection.commit()
+        return {"message": "User progress deleted successfully!"}        
+
+    def delete_user_forum_thread_comment(self, user_id: int, thread_id: int, comment_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserForumThreadComment(:user_id, :comment_id, :thread_id)")
+            connection.execute(procedure_call, {'user_id': user_id,'thread_id': thread_id ,'comment_id': comment_id})
+            connection.commit()
+        return {"message": "User Forum Thread Comment deleted successfully!"}        
+
+    def delete_user_session(self, session_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteSession(:session_id)")
+            connection.execute(procedure_call, {'session_id': session_id})
+            connection.commit()
+        return {"message": "User session deleted successfully!"}        
+
+    def delete_user_course(self, user_id: int, course_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserCourse(:course_id, :user_id)")
+            connection.execute(procedure_call, {'user_id': user_id, 'course_id': course_id})
+            connection.commit()
+        return {"message": "User course deleted successfully!"}        
+
+    def delete_user_test(self, user_id: int, course_id: int, test_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserTest(:user_id, :course_id, :test_id)")
+            connection.execute(procedure_call, {'user_id': user_id, 'course_id': course_id, 'test_id': test_id})
+            connection.commit()
+        return {"message": "User test deleted successfully!"}        
+
+    def delete_user_assignment(self, user_id: int, course_id: int, lecture_id: int, assignment_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserAssignment(:user_id, :assignment_id, :lecture_id, :course_id)")
+            connection.execute(procedure_call, {'user_id': user_id, 'assignment_id': assignment_id, 'lecture_id': lecture_id, 'course_id': course_id})
+            connection.commit()
+        return {"message": "User Assingment deleted successfully!"}        
+
+    def delete_certificate(self, certificate_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteCertificate(:certificate_id)")
+            connection.execute(procedure_call, {'certificate_id': certificate_id})
+            connection.commit()
+        return {"message": "User Certificate deleted successfully!"}        
+
+    def delete_user_forum_thread(self, user_id: int, thread_id: int):
+        with self.db_engine.connect() as connection:
+            procedure_call = text("CALL sp_DeleteUserForumThread(:user_id, :thread_id)")
+            connection.execute(procedure_call, {'user_id': user_id, 'thread_id': thread_id})
+            connection.commit()
+        return {"message": "User Forum thread deleted successfully!"}        

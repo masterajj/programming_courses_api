@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from database.forum_db import ForumDb
-from database.data_models import ForumThread, ForumThreadComment, UserForumThreadComment
+from database.data_models import ForumThread, ForumThreadComment
 
 router = APIRouter()
 
@@ -14,7 +14,12 @@ async def insert_forum_thread_comment(forum_thread_comment: ForumThreadComment):
     db = ForumDb()
     return db.insert_forum_thread_comment(forum_thread_comment)
 
-@router.post("/forum_thread/comment/user")
-async def assign_user_forum_thread_comment(user_forum_thread_comment: UserForumThreadComment):
+@router.delete("/forum_thread/{forum_thread_id}")
+async def delete_forum_thread(forum_thread_id: int):
     db = ForumDb()
-    return db.assign_user_forum_thread_comment(user_forum_thread_comment)
+    return db.delete_forum_thread(forum_thread_id)
+
+@router.delete("/forum_thread/comment/{comment_id}")
+async def delete_forum_thread_comment(comment_id: int):
+    db = ForumDb()
+    return db.delete_forum_thread_comment(comment_id)
