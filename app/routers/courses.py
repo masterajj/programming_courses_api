@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from database.courses_db import CoursesDb
-from database.data_models import Course, CourseRating, CourseComment, CourseFaq, CourseTagAssign, Lecture, Assignment
+from database.data_models import Course, CourseRating, CourseComment, CourseFaq, CourseTagAssign, Lecture, Assignment, Test
 
 router = APIRouter()
 
@@ -43,6 +43,11 @@ async def create_lecture(lecture: Lecture):
 async def create_assignment(assingment: Assignment):
     db = CoursesDb()
     return db.create_assignment(assingment)
+
+@router.post("/courses/lectures/tests")
+async def create_test(test: Test):
+    db = CoursesDb()
+    return db.create_test(test)
 
 @router.delete("/courses/{course_id}")
 async def delete_user(course_id: int):
