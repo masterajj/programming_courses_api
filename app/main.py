@@ -7,7 +7,7 @@ app = FastAPI()
 async def ready_check():
     return Response(status_code=status.HTTP_200_OK, content="ok")
 
-app.include_router(users.router)
-app.include_router(courses.router)
-app.include_router(forum.router)
-app.include_router(api_system.router)
+app.include_router(users.router, tags=["users"])
+app.include_router(courses.router, tags=["courses"])
+app.include_router(forum.router, tags=["forum"])
+app.include_router(api_system.router, tags=["api_system"])
