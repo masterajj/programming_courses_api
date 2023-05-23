@@ -64,7 +64,7 @@ async def get_course_faq(
     return db.get_course_faq(courses_id)
 
 
-@router.get("/tests/lectures")
+@router.get("/courses/lectures")
 async def get_course_lectures(
     name: Optional[str] = None,
     courses_id: Optional[int] = None,
@@ -73,7 +73,7 @@ async def get_course_lectures(
     return db.get_course_lectures(name, courses_id)
 
 
-@router.get("/tests/lectures/assignments")
+@router.get("/courses/lectures/assignments")
 async def get_lectures_assignments(
     name: Optional[str] = None,
     lecture_id: Optional[int] = None,
@@ -82,7 +82,7 @@ async def get_lectures_assignments(
     return db.get_lectures_assignments(name, lecture_id)
 
 
-@router.get("/tests")
+@router.get("/courses/tests")
 async def get_course_tests(
     name: Optional[str] = None,
     courses_id: Optional[datetime] = None,
