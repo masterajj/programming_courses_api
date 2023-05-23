@@ -5,6 +5,15 @@ import sqlalchemy as db
 
 
 class SysDb(DatabaseConnection):
+    def get_roles(self, role_type: str) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("roles", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if role_type:
+                query = query.where(my_table.c.role_type == role_type)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
     def create_tag(self, tag: Tag):
         with self.db_engine.connect() as connection:
             procedure_call = text("CALL sp_InsertTag(:tag)")

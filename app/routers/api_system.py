@@ -1,8 +1,17 @@
 from fastapi import APIRouter
 from database.sys_db import SysDb
 from database.data_models import Tag, Role
+from typing import Optional
 
 router = APIRouter()
+
+
+@router.get("/roles")
+async def get_roles(
+    role_type: Optional[str] = None,
+):
+    db = SysDb()
+    return db.get_roles(role_type)
 
 
 @router.post("/tags/")

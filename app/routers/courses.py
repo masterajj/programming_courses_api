@@ -36,6 +36,34 @@ async def get_course_faq(
     return db.get_course_faq(courses_id)
 
 
+@router.get("/tests/lectures")
+async def get_course_lectures(
+    name: Optional[str] = None,
+    courses_id: Optional[int] = None,
+):
+    db = CoursesDb()
+    return db.get_course_lectures(name, courses_id)
+
+
+@router.get("/tests/lectures/assignments")
+async def get_lectures_assignments(
+    name: Optional[str] = None,
+    lecture_id: Optional[int] = None,
+):
+    db = CoursesDb()
+    return db.get_lectures_assignments(name, lecture_id)
+
+
+@router.get("/tests")
+async def get_course_tests(
+    name: Optional[str] = None,
+    courses_id: Optional[datetime] = None,
+    score: Optional[datetime] = None,
+):
+    db = CoursesDb()
+    return db.get_course_tests(name, courses_id, score)
+
+
 @router.post("/courses/")
 async def create_course(course: Course):
     db = CoursesDb()
@@ -78,7 +106,7 @@ async def create_assignment(assingment: Assignment):
     return db.create_assignment(assingment)
 
 
-@router.post("/courses/lectures/tests")
+@router.post("/courses/tests")
 async def create_test(test: Test):
     db = CoursesDb()
     return db.create_test(test)

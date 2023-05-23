@@ -35,10 +35,45 @@ class CoursesDb(DatabaseConnection):
 
     def get_course_faq(self, course_id: int) -> dict:
         with self.db_engine.connect() as connection:
-            my_table = db.Table("courses", self.metadata, autoload_with=connection)
+            my_table = db.Table("course_faq", self.metadata, autoload_with=connection)
             query = db.select(my_table).where(my_table.c.id != None)
             if course_id:
                 query = query.where(my_table.c.course_id == course_id)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
+    def get_course_tests(self, name: str, courses_id: int, score: int) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("tests", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if name:
+                query = query.where(my_table.c.name == name)
+            if courses_id:
+                query = query.where(my_table.c.courses_id == courses_id)
+            if score:
+                query = query.where(my_table.c.score == score)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
+    def get_course_lectures(self, name: str, courses_id: int) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("lecture", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if name:
+                query = query.where(my_table.c.name == name)
+            if courses_id:
+                query = query.where(my_table.c.courses_id == courses_id)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
+    def get_lectures_assignments(self, name: str, lecture_id: int) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("assignments", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if name:
+                query = query.where(my_table.c.name == name)
+            if lecture_id:
+                query = query.where(my_table.c.lecture_id == lecture_id)
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
 
