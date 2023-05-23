@@ -31,6 +31,19 @@ class UsersDb(DatabaseConnection):
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
 
+    def get_sessions(self, session_start, session_end, user_id) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("session", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if session_start:
+                query = query.where(my_table.c.session_start == session_start)
+            if session_end:
+                query = query.where(my_table.c.session_end == session_end)
+            if user_id:
+                query = query.where(my_table.c.user_id == user_id)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
     def insert_users(self, user: User) -> dict:
         with self.db_engine.connect() as connection:
             procedure_call = text(

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from database.users_db import UsersDb
 from typing import Optional
+from datetime import datetime
 from database.data_models import (
     User,
     RoleAssign,
@@ -26,6 +27,16 @@ async def get_users(
 ):
     db = UsersDb()
     return db.get_users(username, password, email, country)
+
+
+@router.get("/sessions")
+async def get_sessions(
+    session_start: Optional[datetime] = None,
+    session_end: Optional[datetime] = None,
+    user_id: Optional[str] = None,
+):
+    db = UsersDb()
+    return db.get_sessions(session_start, session_end, user_id)
 
 
 @router.post("/users/")
