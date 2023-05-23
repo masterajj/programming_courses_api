@@ -33,6 +33,15 @@ class CoursesDb(DatabaseConnection):
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
 
+    def get_course_faq(self, course_id: int) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("courses", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if course_id:
+                query = query.where(my_table.c.course_id == course_id)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
     def create_course(self, course: Course) -> dict:
         with self.db_engine.connect() as connection:
             procedure_call = text(

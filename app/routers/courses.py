@@ -28,6 +28,14 @@ async def get_courses(
     return db.get_courses(course_name, creation_date, update_date, description, level)
 
 
+@router.get("/courses/faq")
+async def get_course_faq(
+    courses_id: Optional[int] = None,
+):
+    db = CoursesDb()
+    return db.get_course_faq(courses_id)
+
+
 @router.post("/courses/")
 async def create_course(course: Course):
     db = CoursesDb()
