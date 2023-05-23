@@ -11,9 +11,16 @@ from database.data_models import (
     Lecture,
     Assignment,
     Test,
+    CourseUpdate,
 )
 
 router = APIRouter()
+
+
+@router.put("/course/{courses_id}", response_model=CourseUpdate)
+async def update_course(course_id: int, course: CourseUpdate):
+    db = CoursesDb()
+    return db.update_course(course_id, course)
 
 
 @router.get("/courses")

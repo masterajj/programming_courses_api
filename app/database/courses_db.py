@@ -8,12 +8,33 @@ from database.data_models import (
     Lecture,
     Test,
     Assignment,
+    CourseUpdate,
 )
 import sqlalchemy as db
-from sqlalchemy import text
+from sqlalchemy import text, update
 
 
 class CoursesDb(DatabaseConnection):
+    def update_course(self, course_id: int, course: CourseUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("courses", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == course_id)
+                .values(
+                    course_name=course.course_name if course.course_name else None,
+                    creation_date=course.creation_date
+                    if course.creation_date
+                    else None,
+                    update_date=course.update_date if course.update_date else None,
+                    description=course.description if course.description else None,
+                    level=course.level if course.level else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
     def get_courses(
         self, course_name, creation_date, update_date, description, level
     ) -> dict:

@@ -10,12 +10,30 @@ from database.data_models import (
     Certificate,
     UserForumThread,
     UserForumThreadComment,
+    UserUpdate,
 )
 import sqlalchemy as db
-from sqlalchemy import text
+from sqlalchemy import text, update
 
 
 class UsersDb(DatabaseConnection):
+    def update_user(self, user_id: int, user: UserUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("users", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == user_id)
+                .values(
+                    username=user.username if user.username else None,
+                    password=user.password if user.password else None,
+                    email=user.email if user.email else None,
+                    country=user.country if user.country else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
     def get_users(self, username, password, email, country) -> dict:
         with self.db_engine.connect() as connection:
             my_table = db.Table("users", self.metadata, autoload_with=connection)
@@ -41,6 +59,30 @@ class UsersDb(DatabaseConnection):
                 query = query.where(my_table.c.session_end == session_end)
             if user_id:
                 query = query.where(my_table.c.user_id == user_id)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
+    def get_user_progress(self, courses_completed, user_id) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table(
+                "user_progress", self.metadata, autoload_with=connection
+            )
+            query = db.select(my_table).where(my_table.c.id != None)
+            if courses_completed:
+                query = query.where(my_table.c.courses_completed == courses_completed)
+            if user_id:
+                query = query.where(my_table.c.user_id == user_id)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
+    def get_certificates(self, user_id, courses_id) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("certificates", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if user_id:
+                query = query.where(my_table.c.user_id == user_id)
+            if courses_id:
+                query = query.where(my_table.c.courses_id == courses_id)
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
 
