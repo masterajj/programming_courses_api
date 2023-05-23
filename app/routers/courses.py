@@ -12,9 +12,30 @@ from database.data_models import (
     Assignment,
     Test,
     CourseUpdate,
+    CourseFaqUpdate,
+    LectureUpdate,
+    TestUpdate,
 )
 
 router = APIRouter()
+
+
+@router.put("/course/tests/{tests_id}", response_model=TestUpdate)
+async def update_test(tests_id: int, test: TestUpdate):
+    db = CoursesDb()
+    return db.update_test(tests_id, test)
+
+
+@router.put("/course/lectures/{lecture_id}", response_model=LectureUpdate)
+async def update_lecture(lecture_id: int, lecture: LectureUpdate):
+    db = CoursesDb()
+    return db.update_lecture(lecture_id, lecture)
+
+
+@router.put("/course/faq/{faq_id}", response_model=CourseFaqUpdate)
+async def update_course_faq(course_id: int, faq: CourseUpdate):
+    db = CoursesDb()
+    return db.update_course_faq(course_id, faq)
 
 
 @router.put("/course/{courses_id}", response_model=CourseUpdate)

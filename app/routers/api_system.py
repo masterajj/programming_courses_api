@@ -1,9 +1,23 @@
 from fastapi import APIRouter
 from database.sys_db import SysDb
-from database.data_models import Tag, Role
+from database.data_models import Tag, Role, TagUpdate
 from typing import Optional
 
 router = APIRouter()
+
+
+@router.put("/tags/{tags_id}", response_model=TagUpdate)
+async def update_tags(tags_id: int, tags: TagUpdate):
+    db = SysDb()
+    return db.update_tags(tags_id, tags)
+
+
+@router.get("/tags")
+async def get_tags(
+    tag_name: Optional[str] = None,
+):
+    db = SysDb()
+    return db.get_tags(tag_name)
 
 
 @router.get("/roles")

@@ -9,12 +9,63 @@ from database.data_models import (
     Test,
     Assignment,
     CourseUpdate,
+    CourseFaqUpdate,
+    LectureUpdate,
+    TestUpdate,
 )
 import sqlalchemy as db
 from sqlalchemy import text, update
 
 
 class CoursesDb(DatabaseConnection):
+    def update_test(self, test_id: int, test: TestUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("test", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == test_id)
+                .values(
+                    material=test.material if test.material else None,
+                    name=test.name if test.name else None,
+                    courses_id=test.course_id if test.course_id else None,
+                    score=test.score if test.score else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
+    def update_lecture(self, lecture_id: int, lecture: LectureUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("lecture", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == lecture_id)
+                .values(
+                    material=lecture.material if lecture.material else None,
+                    name=lecture.name if lecture.name else None,
+                    courses_id=lecture.course_id if lecture.course_id else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
+    def update_course_faq(self, course_id: int, faq: CourseFaqUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("course_faq", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == course_id)
+                .values(
+                    material=faq.material if faq.material else None,
+                    courses_id=faq.course_id if faq.courses_id else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
     def update_course(self, course_id: int, course: CourseUpdate) -> dict:
         with self.db_engine.connect() as connection:
             my_table = db.Table("courses", self.metadata, autoload_with=connection)

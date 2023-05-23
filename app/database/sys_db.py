@@ -1,16 +1,39 @@
 from database.database_connection import DatabaseConnection
-from database.data_models import Tag, Role
-from sqlalchemy import text
+from database.data_models import Tag, Role, TagUpdate
+from sqlalchemy import text, update
 import sqlalchemy as db
 
 
 class SysDb(DatabaseConnection):
+    def update_tags(self, tags_id: int, tags: TagUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("tags", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == tags_id)
+                .values(
+                    tag_name=tags.tag_name if tags.tag_name else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
     def get_roles(self, role_type: str) -> dict:
         with self.db_engine.connect() as connection:
             my_table = db.Table("roles", self.metadata, autoload_with=connection)
             query = db.select(my_table).where(my_table.c.id != None)
             if role_type:
                 query = query.where(my_table.c.role_type == role_type)
+            result = connection.execute(query)
+        return [users._asdict() for users in result.fetchall()]
+
+    def get_tags(self, tag_name: str) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("tags", self.metadata, autoload_with=connection)
+            query = db.select(my_table).where(my_table.c.id != None)
+            if tag_name:
+                query = query.where(my_table.c.tag_name == tag_name)
             result = connection.execute(query)
         return [users._asdict() for users in result.fetchall()]
 

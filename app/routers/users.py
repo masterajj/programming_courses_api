@@ -14,9 +14,34 @@ from database.data_models import (
     UserForumThread,
     UserForumThreadComment,
     UserUpdate,
+    SessionUpdate,
+    UserProgressUpdate,
+    CertificateUpdate,
 )
 
 router = APIRouter()
+
+
+@router.put("/users/certificate/{certificate_id}", response_model=CertificateUpdate)
+async def update_certificate(certificate_id: int, certificate: CertificateUpdate):
+    db = UsersDb()
+    return db.update_certificate(certificate_id, certificate)
+
+
+@router.put(
+    "/users/user_progress/{user_progress_id}", response_model=UserProgressUpdate
+)
+async def update_user_progress(
+    user_progress_id: int, user_progress: UserProgressUpdate
+):
+    db = UsersDb()
+    return db.update_user_progress(user_progress_id, user_progress)
+
+
+@router.put("/users/sessions/{session_id}", response_model=SessionUpdate)
+async def update_session(session_id: int, session: SessionUpdate):
+    db = UsersDb()
+    return db.update_session(session_id, session)
 
 
 @router.put("/users/{user_id}", response_model=UserUpdate)

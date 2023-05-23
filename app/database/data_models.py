@@ -32,6 +32,10 @@ class Course(BaseModel):
     level: str
 
 
+class TagUpdate(BaseModel):
+    tag_name: str = None
+
+
 class Tag(BaseModel):
     tag_name: str
 
@@ -66,10 +70,21 @@ class UserProgress(BaseModel):
     user_id: int
 
 
+class UserProgressUpdate(BaseModel):
+    courses_completed: int = None
+    user_id: int = None
+
+
 class UserSession(BaseModel):
     session_start: datetime
     session_end: datetime
     user_id: int
+
+
+class SessionUpdate(BaseModel):
+    session_start: datetime = None
+    session_end: datetime = None
+    user_id: int = None
 
 
 class UserCourse(BaseModel):
@@ -94,6 +109,11 @@ class CourseFaq(BaseModel):
     course_id: int
 
 
+class CourseFaqUpdate(BaseModel):
+    material: str = None
+    course_id: int = None
+
+
 class CourseTagAssign(BaseModel):
     tag_id: int
     course_id: int
@@ -105,11 +125,24 @@ class Lecture(BaseModel):
     course_id: int
 
 
+class LectureUpdate(BaseModel):
+    material: str = None
+    name: str = None
+    course_id: int = None
+
+
 class Test(BaseModel):
     material: str
     name: str
     course_id: int
     score: int
+
+
+class TestUpdate(BaseModel):
+    material: str = None
+    name: str = None
+    course_id: int = None
+    score: int = None
 
 
 class UserTest(BaseModel):
@@ -136,6 +169,12 @@ class Certificate(BaseModel):
     certificate: str
     user_id: int
     course_id: int
+
+
+class CertificateUpdate(BaseModel):
+    certificate: str = None
+    user_id: int = None
+    course_id: int = None
 
 
 class UserForumThread(BaseModel):

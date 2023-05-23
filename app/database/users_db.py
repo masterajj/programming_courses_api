@@ -11,12 +11,78 @@ from database.data_models import (
     UserForumThread,
     UserForumThreadComment,
     UserUpdate,
+    SessionUpdate,
+    UserProgressUpdate,
+    CertificateUpdate,
 )
 import sqlalchemy as db
 from sqlalchemy import text, update
 
 
 class UsersDb(DatabaseConnection):
+    def update_certificate(
+        self, certificate_id: int, certificate_data: CertificateUpdate
+    ) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("certificates", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == certificate_id)
+                .values(
+                    certificate=certificate_data.certificate
+                    if certificate_data.certificate
+                    else None,
+                    users_id=certificate_data.user_id
+                    if certificate_data.user_id
+                    else None,
+                    courses_id=certificate_data.course_id
+                    if certificate_data.course_id
+                    else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
+    def update_user_progress(
+        self, user_progress_id: int, user_progress: UserProgressUpdate
+    ) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table(
+                "user_progress", self.metadata, autoload_with=connection
+            )
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == user_progress_id)
+                .values(
+                    courses_completed=user_progress.courses_completed
+                    if user_progress.courses_completed
+                    else None,
+                    user_id=user_progress.user_id if user_progress.user_id else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
+    def update_session(self, session_id: int, session: SessionUpdate) -> dict:
+        with self.db_engine.connect() as connection:
+            my_table = db.Table("session", self.metadata, autoload_with=connection)
+            stmt = (
+                update(my_table)
+                .where(my_table.c.id == session_id)
+                .values(
+                    session_start=session.session_start
+                    if session.session_start
+                    else None,
+                    session_end=session.session_end if session.session_end else None,
+                    user_id=session.user_id if session.user_id else None,
+                )
+            )
+            connection.execute(stmt)
+            connection.commit()
+        return {"message": "Done!"}
+
     def update_user(self, user_id: int, user: UserUpdate) -> dict:
         with self.db_engine.connect() as connection:
             my_table = db.Table("users", self.metadata, autoload_with=connection)
